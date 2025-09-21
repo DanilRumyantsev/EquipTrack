@@ -2,13 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Printer extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'model',
         'ip_address',
@@ -17,7 +15,7 @@ class Printer extends Model
         'status',
     ];
 
-    public function histories()
+    public function histories(): morphMany
     {
         return $this->morphMany(DeviceHistory::class, 'device');
     }

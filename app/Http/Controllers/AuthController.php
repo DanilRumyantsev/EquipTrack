@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -13,9 +14,6 @@ class AuthController extends Controller
 {
     /**
      * Регистрация пользователя.
-     *
-     * @param  Illuminate\Http\Request  $request
-     * @return Illuminate\Http\JsonResponse
      */
     public function register(Request $request): JsonResponse
     {
@@ -25,7 +23,7 @@ class AuthController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        $user = User::create([
+        User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -36,9 +34,6 @@ class AuthController extends Controller
 
     /**
      * Авторизация пользователя.
-     *
-     * @param  Illuminate\Http\Request  $request
-     * @return Illuminate\Http\JsonResponse
      */
     public function login(Request $request): JsonResponse
     {
@@ -59,18 +54,15 @@ class AuthController extends Controller
     }
 
     /**
-     * Выход пользователя.
-     *
-     * @param  Illuminate\Http\Request  $request
-     * @return Illuminate\Http\JsonResponse
+     * Выход из учетной записи.
      */
-    public function logout(Request $request): JsonResponse
+    public function logout(Request $request): Response
     {
-        Auth::guard('web')->logout(); // Явно указываем guard 'web'
+        Auth::guard('web')->logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return response()->json(['message' => 'Выход выполнен']);
+        return response()->noContent();
     }
 }

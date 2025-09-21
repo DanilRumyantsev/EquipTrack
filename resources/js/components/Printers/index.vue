@@ -74,7 +74,7 @@ const columns = [
 
 const loadPrinters = async () => {
     const res = await axios.get("/printers");
-    printers.value = res.data;
+    printers.value = res.data.data;
 };
 
 const openEditModal = (id) => {
